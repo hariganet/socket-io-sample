@@ -44,9 +44,9 @@ var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function(socket){
   log('connected');
-  socket.on('msg send', function(msg){
-    socket.emit('msg push', msg);
-    socket.broadcast.emit('msg push', msg);
+  socket.on('clientToServer', function(data){
+    socket.emit('serverToClient', data);
+    socket.broadcast.emit('serverToClient', data);
   });
   socket.on('disconnect', function(){
     log('disconnected');
