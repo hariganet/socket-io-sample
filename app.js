@@ -45,10 +45,8 @@ var log = console.log;
 var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function(socket){
-  var data = {"a":{"b":{"c":"d"}}};
-  socket.json.emit('msg push', data);
-  socket.json.broadcast.emit('msg push', data);
-  socket.on('msg send', function(msg){
-      log(msg.a.b.c);
+  socket.on('message', function(msg){
+    socket.send(msg);
+    socket.broadcast.send(msg);  
   });
 });
