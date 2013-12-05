@@ -1,14 +1,27 @@
 var log = function(){ console.log(arguments); }
 
 var socket = io.connect('http://localhost');
+var chat = io.connect('http://localhost/chat');
+var news = io.connect('http://localhost/news');
 
 socket.on('connect', function(){
-  log('connected');
-  socket.emit('clientToServer', 'Test Message PAPAPA!!!!!!!', function(data){
-    log(data);
-  });
-  socket.on('serverToClient', function(data, fn){
-    fn(data + 'was successfully pushed');
+  socket.emit('clientToServer', 'home');
+  socket.on('serverToClient', function(data){
     log(data);
   });
 });
+
+chat.on('connect', function(){
+  socket.emit('clientToServer', 'chat');
+  socket.on('serverToClient', function(data){
+    log(data);
+  });
+});
+
+news.on('connect', function(){
+  socket.emit('clientToServer', 'news');
+  socket.on('serverToClient', function(data){
+    log(data);
+  });
+});
+

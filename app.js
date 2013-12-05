@@ -33,6 +33,8 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/users', user.list);
+app.get('/chat', routes.index);
+app.get('/news', routes.index);
 
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
@@ -44,16 +46,28 @@ var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function(socket){
   log('connected');
-  socket.on('clientToServer', function(data, fn){
-    fn(data + 'was successfully sent');
-
-    socket.emit('serverToClient', data, function(data){
-      log(data);
-    });
+  socket.on('clientToServer', function(data){
+    socket.emit('serverToClient', data);
     socket.broadcast.emit('serverToClient', data);
-  
-  });
-  socket.on('disconnect', function(){
-    log('disconnected');
   });
 });
+
+var char = io
+  .of('/chat')
+  .on('connection', function(socket){
+  log('chat connected');
+  socket.on('clientToServer', function(data){
+    socket.emit('serverToClient', data + ' from chat');
+  });
+});
+
+var news = io
+  .of('/news')
+  .on('connection', function(socket){
+  log('news connected');
+  socket.on('clientToServer', function(data){
+    socket.emit('serverToClient', data + ' from news');
+  });
+});
+
+
