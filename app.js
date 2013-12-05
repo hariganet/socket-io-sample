@@ -47,6 +47,7 @@ io.sockets.on('connection', function(socket){
   socket.on('clientToServer', function(data){
     socket.emit('serverToClient', data);
     socket.broadcast.emit('serverToClient', data);
+    log(data);
   });
   socket.on('disconnect', function(){
     log('disconnected');
