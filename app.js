@@ -47,6 +47,8 @@ var io = require('socket.io').listen(server);
 io.sockets.on('connection', function(socket){
   socket.on('message', function(msg){
     socket.send(msg);
-    socket.broadcast.send(msg);  
+    socket.broadcast.send(msg); 
+    log(socket.id);
+
   });
 });

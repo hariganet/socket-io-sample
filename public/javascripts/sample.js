@@ -5,6 +5,7 @@ var socket = io.connect('http://localhost');
 socket.on('connect', function(){
   socket.send('data');
   socket.on('message', function(msg){
-      log(msg);
+    log(msg);
+    log(socket.id);
   });
 });
