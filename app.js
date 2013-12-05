@@ -44,10 +44,14 @@ var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function(socket){
   log('connected');
-  socket.on('clientToServer', function(data){
-    socket.emit('serverToClient', data);
+  socket.on('clientToServer', function(data, fn){
+    fn(data + 'was successfully sent');
+
+    socket.emit('serverToClient', data, function(data){
+      log(data);
+    });
     socket.broadcast.emit('serverToClient', data);
-    log(data);
+  
   });
   socket.on('disconnect', function(){
     log('disconnected');
