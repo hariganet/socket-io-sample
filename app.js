@@ -45,29 +45,15 @@ var log = console.log;
 var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function(socket){
-  log('connected');
-  socket.on('clientToServer', function(data){
-    socket.emit('serverToClient', data);
-    socket.broadcast.emit('serverToClient', data);
+  socket.on('set nickname', function(name){
+    socket.set('nickname',name, function(){
+      socket.emit('ready'); 
+    });
+  });
+
+  socket.on('get nickname', function(){
+    socket.get('nickname', function(err, name){
+      socket.emit('name', name);
+    });
   });
 });
-
-var char = io
-  .of('/chat')
-  .on('connection', function(socket){
-  log('chat connected');
-  socket.on('clientToServer', function(data){
-    socket.emit('serverToClient', data + ' from chat');
-  });
-});
-
-var news = io
-  .of('/news')
-  .on('connection', function(socket){
-  log('news connected');
-  socket.on('clientToServer', function(data){
-    socket.emit('serverToClient', data + ' from news');
-  });
-});
-
-
